@@ -115,7 +115,7 @@ class ComboResource extends Resource
             'index' => Pages\ListCombos::route('/'),
             'create' => Pages\CreateCombo::route('/create'),
             'edit' => Pages\EditCombo::route('/{record}/edit'),
-            'view' => Pages\ViewCombo::route('/{record}'),
+            // 'view' => Pages\ViewCombo::route('/{record}'),
         ];
     }
 }
