@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-            // Combo Products Pivot
-        Schema::create('combo_product', function (Blueprint $table) {
+        Schema::create('combo_pack_product', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('combo_id')->constrained('combos')->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('combo_pack_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->integer('quantity')->default(1);
-            $table->engine = 'InnoDB';
+            $table->timestamps();
+            
+            $table->unique(['combo_pack_id', 'product_id']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('combo_product');
+        Schema::dropIfExists('combo_pack_product');
     }
 };

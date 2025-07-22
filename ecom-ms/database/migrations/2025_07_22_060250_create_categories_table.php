@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::create('combos', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('combo_id', 50)->unique(); // Combo identifier like CG001
             $table->string('name');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->string('image_url');
+            $table->string('image')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->engine = 'InnoDB';
+            $table->softDeletes();
         });
-
     }
 
     /**
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('combos');
+        Schema::dropIfExists('categories');
     }
 };

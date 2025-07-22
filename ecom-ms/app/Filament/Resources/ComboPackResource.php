@@ -1,11 +1,12 @@
 <?php
-// app/Filament/Resources/ProductResource.php
+// app/Filament/Resources/ComboPackResource.php
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Category;
+use App\Filament\Resources\ComboPackResource\Pages;
+use App\Filament\Resources\ComboPackResource\RelationManagers;
+use App\Filament\Resources\ComboPackResource\RelationManagers\ProductsRelationManager;
 use App\Models\Product;
+use App\Models\ComboPack;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,21 +14,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
-class ProductResource extends Resource
+class ComboPackResource extends Resource
 {
-    protected static ?string $model = Product::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static ?string $model = ComboPack::class;
+    protected static ?string $navigationIcon = 'heroicon-o-gift';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\TextInput::make('product_code')
+                Forms\Components\TextInput::make('combo_code')
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
@@ -49,32 +45,30 @@ class ProductResource extends Resource
                     ->required()
                     ->numeric()
                     ->prefix('$'),
-                Forms\Components\TextInput::make('cost_price')
+                Forms\Components\TextInput::make('discount_price')
                     ->numeric()
                     ->prefix('$'),
-                Forms\Components\TextInput::make('stock_quantity')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('min_stock_threshold')
-                    ->numeric()
-                    ->default(5),
-                Forms\Components\TextInput::make('sku')
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true),
-                Forms\Components\TextInput::make('barcode')
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true),
                 Forms\Components\FileUpload::make('images')
                     ->image()
                     ->multiple()
-                    ->directory('products')
+                    ->directory('combo_packs')
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('is_active')
                     ->required(),
-                Forms\Components\Toggle::make('is_featured')
-                    ->required(),
-                Forms\Components\KeyValue::make('specifications')
+                Forms\Components\Repeater::make('products')
+                    ->relationship('products')
+                    ->schema([
+                        Forms\Components\Select::make('product_id')
+                            ->label('Product')
+                            ->options(Product::all()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+                        Forms\Components\TextInput::make('quantity')
+                            ->numeric()
+                            ->default(1)
+                            ->required(),
+                    ])
+                    ->columns(2)
                     ->columnSpanFull(),
             ]);
     }
@@ -87,35 +81,24 @@ class ProductResource extends Resource
                     ->circular()
                     ->stacked()
                     ->limit(1),
-                Tables\Columns\TextColumn::make('product_code')
+                Tables\Columns\TextColumn::make('combo_code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('category.name')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('stock_quantity')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('discount_price')
+                    ->money()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('is_featured')
-                    ->boolean(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('category')
-                    ->relationship('category', 'name'),
                 Tables\Filters\SelectFilter::make('is_active')
                     ->options([
                         '1' => 'Active',
                         '0' => 'Inactive',
-                    ]),
-                Tables\Filters\SelectFilter::make('is_featured')
-                    ->options([
-                        '1' => 'Featured',
-                        '0' => 'Not Featured',
                     ]),
             ])
             ->actions([
@@ -132,16 +115,16 @@ class ProductResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ComboPacksRelationManager::class,
+            ProductsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListComboPacks::route('/'),
+            'create' => Pages\CreateComboPack::route('/create'),
+            'edit' => Pages\EditComboPack::route('/{record}/edit'),
         ];
     }
 }

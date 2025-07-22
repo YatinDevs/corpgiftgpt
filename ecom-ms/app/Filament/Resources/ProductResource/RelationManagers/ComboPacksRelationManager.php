@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Filament\Resources\CategoryResource\RelationManagers;
+namespace App\Filament\Resources\ProductResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\Product;
+use App\Models\ComboPack;
 
-class ProductsRelationManager extends RelationManager
+class ComboPacksRelationManager extends RelationManager
 {
-    protected static string $relationship = 'products';
+    protected static string $relationship = 'comboPacks';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('product_code')
+                Forms\Components\TextInput::make('combo_code')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
@@ -27,9 +27,6 @@ class ProductsRelationManager extends RelationManager
                     ->required()
                     ->numeric()
                     ->prefix('$'),
-                Forms\Components\TextInput::make('stock_quantity')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 
@@ -38,30 +35,35 @@ class ProductsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('product_code')
+                Tables\Columns\TextColumn::make('combo_code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('stock_quantity')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('pivot.quantity')
+                    ->label('Quantity in Combo'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->form(fn (Tables\Actions\AttachAction $action): array => [
+                        $action->getRecordSelect(),
+                        Forms\Components\TextInput::make('quantity')
+                            ->numeric()
+                            ->required()
+                            ->default(1),
+                    ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }

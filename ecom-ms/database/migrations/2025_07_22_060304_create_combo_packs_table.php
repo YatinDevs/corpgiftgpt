@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id(); // Auto-incrementing primary key
-            $table->string('product_id', 50)->unique(); // Your original H934, H935 etc.
+        Schema::create('combo_packs', function (Blueprint $table) {
+            $table->id();
+            $table->string('combo_code')->unique()->comment('Admin defined unique code');
             $table->string('name');
-            $table->foreignId('category_id')->constrained('categories');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
-            $table->string('image_url');
-            $table->string('size')->nullable();
+            $table->decimal('discount_price', 10, 2)->nullable();
+            $table->json('images')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->engine = 'InnoDB';
+            $table->softDeletes();
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('combo_packs');
     }
 };

@@ -2,30 +2,42 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'slug', 'parent_id'];
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'image',
+        'is_active'
+    ];
 
-    public function products(): HasMany
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function products()
     {
         return $this->hasMany(Product::class);
     }
 
-    public function parent(): BelongsTo
+    // Generate slug automatically
+    public static function boot()
     {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
+        parent::boot();
 
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
+        static::creating(function ($category) {
+            $category->slug = \Str::slug($category->name);
+        });
+
+        static::updating(function ($category) {
+            $category->slug = \Str::slug($category->name);
+        });
     }
 }
