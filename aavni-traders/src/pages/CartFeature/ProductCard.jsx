@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart } from "lucide-react";
-import { CartContext } from "../../Layout/Layout";
+import useStore from "../../store/useStore";
 
 const ProductCard = ({ product, index }) => {
-  const { addToCart } = useContext(CartContext);
+  const addToCart = useStore((state) => state.addToCart);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -24,7 +23,7 @@ const ProductCard = ({ product, index }) => {
         <Link to={`/product/${product.id}`} className="block">
           <div className="relative aspect-square overflow-hidden">
             <img
-              src={product.image}
+              src={product.images?.[0] || "/placeholder-product.jpg"}
               alt={product.name}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
@@ -45,8 +44,10 @@ const ProductCard = ({ product, index }) => {
             <span className="font-bold text-gray-900">₹{product.price}</span>
           </div>
 
-          {product.size && (
-            <p className="text-xs text-gray-500 mb-2">Size: {product.size}</p>
+          {product.specifications?.size && (
+            <p className="text-xs text-gray-500 mb-2">
+              Size: {product.specifications.size}
+            </p>
           )}
 
           <div className="flex justify-between items-center mt-3">
