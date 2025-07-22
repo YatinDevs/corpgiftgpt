@@ -1,14 +1,27 @@
+// src/components/ProductCard.jsx
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart } from "lucide-react";
-import useStore from "../../store/useStore";
+import { useStore } from "../../store/useStore";
+import { useToast } from "../../context/ToastContext";
 
 const ProductCard = ({ product, index }) => {
   const addToCart = useStore((state) => state.addToCart);
+  const { addToast } = useToast();
 
   const handleAddToCart = (e) => {
     e.preventDefault();
-    addToCart(product);
+    try {
+      addToCart(product);
+    } catch (error) {
+      addToast("Failed to add to cart", "error");
+      console.error("Add to cart error:", error);
+    }
+  };
+
+  const handleWishlist = (e) => {
+    e.preventDefault();
+    addToast("Added to wishlist", "success");
   };
 
   return (
@@ -28,7 +41,17 @@ const ProductCard = ({ product, index }) => {
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />
-            <button className="absolute top-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full backdrop-blur-sm transition-all hover:scale-110">
+            {product.stock_quantity <= 0 && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <span className="text-white font-bold bg-red-500 px-2 py-1 rounded">
+                  Out of Stock
+                </span>
+              </div>
+            )}
+            <button
+              onClick={handleWishlist}
+              className="absolute top-3 right-3 bg-white/80 hover:bg-white p-2 rounded-full backdrop-blur-sm transition-all hover:scale-110"
+            >
               <Heart className="w-4 h-4 text-rose-500" />
             </button>
           </div>
@@ -53,10 +76,17 @@ const ProductCard = ({ product, index }) => {
           <div className="flex justify-between items-center mt-3">
             <button
               onClick={handleAddToCart}
-              className="flex items-center gap-1 text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors"
+              disabled={product.stock_quantity <= 0}
+              className={`flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg transition-colors ${
+                product.stock_quantity <= 0
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
             >
               <ShoppingCart className="w-4 h-4" />
-              <span>Add to Cart</span>
+              <span>
+                {product.stock_quantity <= 0 ? "Out of Stock" : "Add to Cart"}
+              </span>
             </button>
             <Link
               to={`/product/${product.id}`}

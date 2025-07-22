@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+// src/components/Navbar.jsx
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   X,
@@ -18,13 +19,14 @@ import {
   Home,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CartContext } from "../Layout/Layout";
+import { useStore, useItemCount } from "../store/useStore";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const { cartItems, openCart } = useContext(CartContext);
+  const itemCount = useItemCount();
+  const { isCartOpen, openCart, closeCart, toggleCart } = useStore();
 
   const navItems = [
     { label: "Home", path: "/", icon: <Home className="h-4 w-4 mr-2" /> },
@@ -89,6 +91,13 @@ const Navbar = () => {
   const toggleDropdown = (dropdown) => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
   };
+
+  // Close mobile menu when cart opens
+  useEffect(() => {
+    if (isCartOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [isCartOpen]);
 
   return (
     <header className="fixed w-full z-50">
@@ -198,14 +207,14 @@ const Navbar = () => {
 
             {/* Shopping Cart Button */}
             <button
-              onClick={openCart}
-              className="relative ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+              onClick={toggleCart}
+              className="relative ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors group"
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
               Cart
-              {cartItems?.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartItems?.reduce((total, item) => total + item.quantity, 0)}
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                  {itemCount}
                 </span>
               )}
             </button>
@@ -214,13 +223,13 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div className="flex lg:hidden items-center gap-4">
             <button
-              onClick={openCart}
+              onClick={toggleCart}
               className="relative p-2 text-gray-700 hover:text-blue-600"
             >
               <ShoppingCart size={20} />
-              {cartItems?.length > 0 && (
+              {itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                  {cartItems?.reduce((total, item) => total + item.quantity, 0)}
+                  {itemCount}
                 </span>
               )}
             </button>

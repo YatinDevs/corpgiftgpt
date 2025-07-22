@@ -1,6 +1,9 @@
+// src/components/CartSidebar.jsx
 import { X, ShoppingCart, ArrowRight, Trash2, Plus, Minus } from "lucide-react";
 import { Link } from "react-router-dom";
-import useStore, { useCartTotal, useItemCount } from "../../store/useStore";
+
+import { useCartTotal, useItemCount, useStore } from "../../store/useStore";
+import { useToast } from "../../context/ToastContext";
 
 const EmptyCartIllustration = () => (
   <svg
@@ -10,7 +13,27 @@ const EmptyCartIllustration = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* SVG paths from your original code */}
+    <path
+      d="M50 50C50 22.3858 72.3858 0 100 0C127.614 0 150 22.3858 150 50V150C150 177.614 127.614 200 100 200C72.3858 200 50 177.614 50 150V50Z"
+      fill="#F3F4F6"
+    />
+    <path
+      d="M75 62.5C75 56.1487 80.1487 51 86.5 51H113.5C119.851 51 125 56.1487 125 62.5V137.5C125 143.851 119.851 149 113.5 149H86.5C80.1487 149 75 143.851 75 137.5V62.5Z"
+      fill="#E5E7EB"
+    />
+    <path
+      d="M85 70C85 65.0294 89.0294 61 94 61H106C110.971 61 115 65.0294 115 70V130C115 134.971 110.971 139 106 139H94C89.0294 139 85 134.971 85 130V70Z"
+      fill="#FFFFFF"
+    />
+    <circle cx="100" cy="170" r="10" fill="#9CA3AF" />
+    <circle cx="140" cy="60" r="10" fill="#9CA3AF" />
+    <circle cx="60" cy="60" r="10" fill="#9CA3AF" />
+    <path
+      d="M70 30H130"
+      stroke="#9CA3AF"
+      strokeWidth="4"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
@@ -23,13 +46,54 @@ const CartSidebar = () => {
     closeCart,
     clearCart,
   } = useStore();
+  const { addToast } = useToast();
 
   // Use the selectors
   const cartTotal = useCartTotal();
   const itemCount = useItemCount();
+
   // Calculate delivery fee
   const deliveryFee = cartTotal > 2000 ? 0 : 50;
   const totalWithDelivery = cartTotal + deliveryFee;
+
+  const handleClearCart = () => {
+    try {
+      clearCart();
+      addToast("Cart has been cleared", "info");
+    } catch (error) {
+      addToast("Failed to clear cart", "error");
+      console.error("Clear cart error:", error);
+    }
+  };
+
+  const handleRemoveItem = (item) => {
+    try {
+      removeFromCart(item.id);
+      addToast(`${item.name} removed from cart`, "info");
+    } catch (error) {
+      addToast("Failed to remove item", "error");
+      console.error("Remove item error:", error);
+    }
+  };
+
+  const handleQuantityChange = (item, newQuantity) => {
+    try {
+      if (newQuantity < 1) {
+        addToast("Quantity must be at least 1", "warning");
+        return;
+      }
+
+      if (newQuantity > item.stock_quantity) {
+        addToast(`Only ${item.stock_quantity} available in stock`, "error");
+        return;
+      }
+
+      updateQuantity(item.id, newQuantity);
+    } catch (error) {
+      addToast("Failed to update quantity", "error");
+      console.error("Update quantity error:", error);
+    }
+  };
 
   return (
     <div className={`fixed inset-0 z-50 ${isCartOpen ? "block" : "hidden"}`}>
@@ -50,12 +114,12 @@ const CartSidebar = () => {
           <div className="border-b p-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
               <ShoppingCart size={20} className="text-blue-600" />
-              <h3 className="text-xl font-bold">Your Cart {itemCount} </h3>
+              <h3 className="text-xl font-bold">Your Cart ({itemCount})</h3>
             </div>
             <div className="flex items-center gap-2">
               {cartItems.length > 0 && (
                 <button
-                  onClick={clearCart}
+                  onClick={handleClearCart}
                   className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1"
                 >
                   <Trash2 size={16} />
@@ -124,9 +188,10 @@ const CartSidebar = () => {
                           <div className="flex items-center border rounded-md overflow-hidden">
                             <button
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity - 1)
+                                handleQuantityChange(item, item.quantity - 1)
                               }
                               className="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition-colors"
+                              disabled={item.quantity <= 1}
                             >
                               <Minus size={14} />
                             </button>
@@ -135,15 +200,16 @@ const CartSidebar = () => {
                             </span>
                             <button
                               onClick={() =>
-                                updateQuantity(item.id, item.quantity + 1)
+                                handleQuantityChange(item, item.quantity + 1)
                               }
                               className="px-3 py-1 bg-gray-100 hover:bg-gray-200 transition-colors"
+                              disabled={item.quantity >= item.stock_quantity}
                             >
                               <Plus size={14} />
                             </button>
                           </div>
                           <button
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => handleRemoveItem(item)}
                             className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
                           >
                             <Trash2 size={14} />

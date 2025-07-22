@@ -8,7 +8,7 @@ import {
 import Layout from "./Layout/Layout";
 import Home from "./pages/Home/Home";
 import PageNotFound from "./pages/ErrorPages/NotFound";
-import useStore from "./store/useStore";
+import { useStore } from "./store/useStore";
 
 function App() {
   const {

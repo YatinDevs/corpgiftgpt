@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import ProductCard from "../CartFeature/ProductCard";
-import useStore from "../../store/useStore";
+import { useStore } from "../../store/useStore";
 
 const ProductsPage = () => {
   const { products, loadingProducts, productError, fetchProducts } = useStore();
