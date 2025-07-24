@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import React, { useState, useEffect } from "react";
 import {
   Menu,
@@ -92,7 +91,6 @@ const Navbar = () => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
   };
 
-  // Close mobile menu when cart opens
   useEffect(() => {
     if (isCartOpen) {
       setIsMenuOpen(false);
@@ -103,7 +101,7 @@ const Navbar = () => {
     <header className="fixed w-full z-50">
       {/* Top Contact Bar */}
       <div
-        className={`bg-gradient-to-r from-blue-900 to-blue-700 text-white text-sm transition-all duration-300 ${
+        className={`bg-[#2F263B] text-[#D3D2D2] text-sm transition-all duration-300 ${
           scrolled ? "h-0 overflow-hidden" : "h-10"
         }`}
       >
@@ -111,21 +109,21 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             <a
               href="mailto:info@aavnitraders.com"
-              className="flex items-center hover:text-blue-200 transition-colors"
+              className="flex items-center hover:text-[#DEAF29] transition-colors"
             >
               <Mail className="h-4 w-4 mr-1" />
               info@aavnitraders.com
             </a>
             <a
               href="tel:+919876543210"
-              className="flex items-center hover:text-blue-200 transition-colors"
+              className="flex items-center hover:text-[#DEAF29] transition-colors"
             >
               <Phone className="h-4 w-4 mr-1" />
               +91 9876543210
             </a>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <MapPin className="h-4 w-4 mr-1" />
+            <MapPin className="h-4 w-4 mr-1 text-[#DEAF29]" />
             <span>Mumbai, India</span>
           </div>
         </div>
@@ -139,7 +137,7 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center">
-            <a href="/" className="text-2xl font-bold text-blue-700">
+            <a href="/" className="text-2xl font-bold text-[#780A0A]">
               <img
                 src="/logo.png"
                 alt="Aavni Traders"
@@ -156,7 +154,7 @@ const Navbar = () => {
                   <>
                     <button
                       onClick={() => toggleDropdown(item.label)}
-                      className="flex items-center text-gray-800 hover:text-blue-600 transition-colors font-medium"
+                      className="flex items-center text-[#2F263B] hover:text-[#780A0A] transition-colors font-medium"
                     >
                       {item.icon}
                       {item.label}
@@ -173,7 +171,7 @@ const Navbar = () => {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
-                          className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-gray-100"
+                          className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg z-50 border border-[#D3D2D2]"
                         >
                           <div className="py-1">
                             {item.subItems.map((subItem) => (
@@ -182,7 +180,7 @@ const Navbar = () => {
                                 href={`/${item.path}/${subItem
                                   .toLowerCase()
                                   .replace(/\s+/g, "-")}`}
-                                className="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm"
+                                className="block px-4 py-2 text-[#2F263B] hover:bg-[#780A0A]/10 hover:text-[#780A0A] transition-colors text-sm"
                                 onClick={() => setOpenDropdown(null)}
                               >
                                 {subItem}
@@ -196,7 +194,7 @@ const Navbar = () => {
                 ) : (
                   <a
                     href={item.path}
-                    className="flex items-center text-gray-800 hover:text-blue-600 transition-colors font-medium"
+                    className="flex items-center text-[#2F263B] hover:text-[#780A0A] transition-colors font-medium"
                   >
                     {item.icon}
                     {item.label}
@@ -208,12 +206,12 @@ const Navbar = () => {
             {/* Shopping Cart Button */}
             <button
               onClick={toggleCart}
-              className="relative ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors group"
+              className="relative ml-4 bg-[#780A0A] hover:bg-[#5e0808] text-white px-4 py-2 rounded-lg flex items-center transition-colors group"
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
               Cart
               {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                <span className="absolute -top-2 -right-2 bg-[#DEAF29] text-[#2F263B] text-xs rounded-full w-5 h-5 flex items-center justify-center transform group-hover:scale-110 transition-transform">
                   {itemCount}
                 </span>
               )}
@@ -224,17 +222,17 @@ const Navbar = () => {
           <div className="flex lg:hidden items-center gap-4">
             <button
               onClick={toggleCart}
-              className="relative p-2 text-gray-700 hover:text-blue-600"
+              className="relative p-2 text-[#2F263B] hover:text-[#780A0A]"
             >
               <ShoppingCart size={20} />
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#DEAF29] text-[#2F263B] text-xs rounded-full w-4 h-4 flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
             </button>
             <button
-              className="text-gray-700 focus:outline-none"
+              className="text-[#2F263B] focus:outline-none"
               onClick={toggleMenu}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -258,7 +256,7 @@ const Navbar = () => {
                 <div className="flex items-center">
                   <img src="/logo.png" alt="Aavni Traders" className="h-10" />
                 </div>
-                <button onClick={toggleMenu} className="text-gray-700">
+                <button onClick={toggleMenu} className="text-[#2F263B]">
                   <X size={24} />
                 </button>
               </div>
@@ -267,13 +265,13 @@ const Navbar = () => {
                 {navItems.map((item) => (
                   <div
                     key={item.label}
-                    className="border-b border-gray-100 pb-2"
+                    className="border-b border-[#D3D2D2]/30 pb-2"
                   >
                     {item.subItems ? (
                       <>
                         <button
                           onClick={() => toggleDropdown(item.label)}
-                          className="flex items-center justify-between w-full py-3 text-gray-800 font-medium"
+                          className="flex items-center justify-between w-full py-3 text-[#2F263B] font-medium"
                         >
                           <div className="flex items-center">
                             {item.icon}
@@ -299,7 +297,7 @@ const Navbar = () => {
                                   href={`/${item.path}/${subItem
                                     .toLowerCase()
                                     .replace(/\s+/g, "-")}`}
-                                  className="block py-2 text-gray-600 hover:text-blue-600 transition-colors text-sm"
+                                  className="block py-2 text-[#2F263B]/80 hover:text-[#780A0A] transition-colors text-sm"
                                   onClick={toggleMenu}
                                 >
                                   {subItem}
@@ -312,7 +310,7 @@ const Navbar = () => {
                     ) : (
                       <a
                         href={item.path}
-                        className="flex items-center py-3 text-gray-800 hover:text-blue-600 transition-colors font-medium"
+                        className="flex items-center py-3 text-[#2F263B] hover:text-[#780A0A] transition-colors font-medium"
                         onClick={toggleMenu}
                       >
                         {item.icon}
@@ -323,24 +321,26 @@ const Navbar = () => {
                 ))}
               </div>
 
-              <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-3">Contact Us</h3>
+              <div className="mt-8 p-4 bg-[#2F263B]/10 rounded-lg">
+                <h3 className="font-semibold text-[#2F263B] mb-3">
+                  Contact Us
+                </h3>
                 <a
                   href="mailto:info@aavnitraders.com"
-                  className="flex items-center text-gray-700 mb-2 text-sm"
+                  className="flex items-center text-[#2F263B]/80 mb-2 text-sm"
                 >
-                  <Mail className="h-5 w-5 mr-2 text-blue-600" />
+                  <Mail className="h-5 w-5 mr-2 text-[#780A0A]" />
                   info@aavnitraders.com
                 </a>
                 <a
                   href="tel:+919876543210"
-                  className="flex items-center text-gray-700 mb-2 text-sm"
+                  className="flex items-center text-[#2F263B]/80 mb-2 text-sm"
                 >
-                  <Phone className="h-5 w-5 mr-2 text-blue-600" />
+                  <Phone className="h-5 w-5 mr-2 text-[#780A0A]" />
                   +91 9876543210
                 </a>
-                <div className="flex items-start text-gray-700 text-sm">
-                  <MapPin className="h-5 w-5 mr-2 text-blue-600 mt-1" />
+                <div className="flex items-start text-[#2F263B]/80 text-sm">
+                  <MapPin className="h-5 w-5 mr-2 text-[#780A0A] mt-1" />
                   <span>
                     Corporate Office: 123 Business Park, Mumbai, India - 400001
                   </span>
