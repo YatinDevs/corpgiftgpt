@@ -1,33 +1,68 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiFilter, FiChevronDown, FiX, FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import products from "../../data/products.json";
 import ProductCard from "../CartFeature/ProductCard";
+import { useStore } from "../../store/useStore";
 
-const ProductShowcase = () => {
+const ProductsShowcase = () => {
+  const {
+    products = { data: [] }, // Default empty object with data array
+    categories = [], // Default empty array
+    loadingStates: { products: loadingProducts, categories: loadingCategories },
+    errors: { products: productsError, categories: categoriesError },
+    fetchProducts,
+    fetchCategories,
+  } = useStore();
+  console.log(products);
   const [activeFilter, setActiveFilter] = useState("All");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProducts =
-    activeFilter === "All"
-      ? products.products
-      : products.products.filter(
-          (product) => product.category === activeFilter
-        );
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
 
-  // Apply search filter
-  const searchedProducts = filteredProducts.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Safely filter products
+  const filteredProducts = products
+    ? activeFilter === "All"
+      ? products
+      : products.filter((product) => product.category?.name === activeFilter)
+    : [];
+
+  // Safely apply search filter
+  const searchedProducts =
+    filteredProducts?.filter((product) => {
+      const nameMatch = product.name
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const descMatch = product.description
+        ?.toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      return nameMatch || descMatch;
+    }) || [];
 
   const clearFilters = () => {
     setActiveFilter("All");
     setSearchQuery("");
   };
+
+  if (loadingProducts || loadingCategories) {
+    return (
+      <div className="py-16 bg-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (productsError || categoriesError) {
+    return (
+      <div className="py-16 bg-white flex items-center justify-center">
+        <div className="text-red-500">{productsError || categoriesError}</div>
+      </div>
+    );
+  }
 
   return (
     <section className="py-16 bg-white">
@@ -123,20 +158,33 @@ const ProductShowcase = () => {
               transition={{ type: "spring", damping: 25 }}
             >
               <div className="grid grid-cols-2 gap-3">
-                {products.categories.map((category) => (
+                <button
+                  onClick={() => {
+                    setActiveFilter("All");
+                    setShowMobileFilters(false);
+                  }}
+                  className={`px-4 py-2 rounded-lg text-sm text-left ${
+                    activeFilter === "All"
+                      ? "bg-gray-900 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  All Products
+                </button>
+                {categories.map((category) => (
                   <button
-                    key={category}
+                    key={category.id}
                     onClick={() => {
-                      setActiveFilter(category);
+                      setActiveFilter(category.name);
                       setShowMobileFilters(false);
                     }}
                     className={`px-4 py-2 rounded-lg text-sm text-left ${
-                      activeFilter === category
+                      activeFilter === category.name
                         ? "bg-gray-900 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   >
-                    {category}
+                    {category.name}
                   </button>
                 ))}
               </div>
@@ -156,17 +204,17 @@ const ProductShowcase = () => {
           >
             All Products
           </button>
-          {products.categories.map((category) => (
+          {categories.map((category) => (
             <button
-              key={category}
-              onClick={() => setActiveFilter(category)}
+              key={category.id}
+              onClick={() => setActiveFilter(category.name)}
               className={`px-4 py-2 rounded-full whitespace-nowrap ${
-                activeFilter === category
+                activeFilter === category.name
                   ? "bg-gray-900 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {category}
+              {category.name}
             </button>
           ))}
         </div>
@@ -199,30 +247,9 @@ const ProductShowcase = () => {
             </button>
           </div>
         )}
-
-        <div className="text-center mt-12">
-          <Link
-            to="/products"
-            className="inline-flex items-center gap-2 border-2 border-gray-900 text-gray-900 font-medium px-8 py-3 rounded-lg hover:bg-gray-900 hover:text-white transition-colors group"
-          >
-            View Full Collection
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 group-hover:translate-x-1 transition-transform"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </Link>
-        </div>
       </div>
     </section>
   );
 };
 
-export default ProductShowcase;
+export default ProductsShowcase;

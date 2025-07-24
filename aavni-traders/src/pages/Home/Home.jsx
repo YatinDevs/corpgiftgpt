@@ -3,14 +3,15 @@ import HeroSection from "./HeroSection";
 import ProductShowcase from "./ProductShowcase";
 import CategoriesSection from "./CategoriesSection";
 import ProductsPage from "./ProductsPage";
+import ComboPacksShowcase from "./ComboPacksShowcase";
 
 function Home() {
   return (
     <div>
       <HeroSection />
       <CategoriesSection />
-      <ProductsPage />
       <ProductShowcase />
+      <ComboPacksShowcase />
     </div>
   );
 }

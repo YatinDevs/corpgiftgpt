@@ -186,9 +186,10 @@ const Footer = () => {
         className="mt-16 text-center text-sm text-[#D3D2D2]/60 border-t border-[#2F263B] pt-6"
       >
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <p>
+          <div className="bg-[#DEAF29] p-10">
             © {new Date().getFullYear()} Aavni Traders. All Rights Reserved.
-          </p>
+          </div>
+
           <div className="flex gap-4 mt-3 md:mt-0">
             <a href="#" className="hover:text-[#DEAF29]">
               Privacy Policy
