@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStore, useItemCount } from "../store/useStore";
+import { logo } from "../assets";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -104,7 +105,7 @@ const Navbar = () => {
           }`}
         >
           <div className="container mx-auto px-4 h-full flex items-center justify-around">
-            <div className="flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-6 ">
               <a
                 href="mailto:smitaaaher@corpgiftgpt.com"
                 className="flex items-center hover:text-[#a30d14] transition-colors"
@@ -132,9 +133,7 @@ const Navbar = () => {
           <div className="container mx-auto px-4 h-full flex items-center justify-end">
             <div className="hidden md:flex items-center space-x-4">
               <MapPin className="h-4 w-4 mr-1 text-[#fcce01]" />
-              <span>
-                Ashwin Nagar, Cidco, Nashik - 422009, Maharashtra, Bharat
-              </span>
+              <span>Maharashtra</span>
             </div>
           </div>
         </div>
@@ -143,17 +142,13 @@ const Navbar = () => {
       {/* Main Navbar */}
       <nav
         className={`bg-white shadow-md transition-all duration-300 ${
-          scrolled ? "py-2" : "py-4"
+          scrolled ? "py-4" : "py-6"
         }`}
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center">
             <a href="/" className="text-2xl font-bold text-[#1b53a5]">
-              <img
-                src="/logo.png"
-                alt="CORP GIFT GPT"
-                className="h-12 w-auto"
-              />
+              <img src={logo} alt="CORP GIFT GPT" className="h-12 w-auto" />
             </a>
           </div>
 
