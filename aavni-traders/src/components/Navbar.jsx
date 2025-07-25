@@ -97,11 +97,11 @@ const Navbar = () => {
   return (
     <header className="fixed w-full z-50">
       {/* Top Contact Bar */}
-      <div className="relative">
+      <div className=" relative">
         {/* Yellow curved section */}
         <div
-          className={`relative z-10 w-1/2 rounded-br-full bg-[#fcce01] text-[#1b53a5] text-sm transition-all duration-300 ${
-            scrolled ? "h-0 overflow-hidden" : "h-14"
+          className={`relative z-10 w-1/2 rounded-br-full bg-[#d4d3d0] text-[#1b53a5] text-sm transition-all duration-300 ${
+            scrolled ? "h-14 overflow-hidden" : "h-14"
           }`}
         >
           <div className="container mx-auto px-4 h-full flex items-center justify-around">
@@ -126,8 +126,8 @@ const Navbar = () => {
 
         {/* Red section - positioned to overlap */}
         <div
-          className={`relative bg-[#a30d14] text-white text-sm transition-all duration-300 ${
-            scrolled ? "h-0 overflow-hidden -mt-0" : "h-10 -mt-14"
+          className={`relative bg-[#1b53a5] text-white text-sm transition-all duration-300 ${
+            scrolled ? "h-10 overflow-hidden -mt-14" : "h-10 -mt-14"
           }`}
         >
           <div className="container mx-auto px-4 h-full flex items-center justify-end">

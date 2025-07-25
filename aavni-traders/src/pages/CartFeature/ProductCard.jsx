@@ -36,7 +36,11 @@ const ProductCard = ({ product, index }) => {
         <Link to={`/product/${product.id}`} className="block">
           <div className="relative aspect-square overflow-hidden">
             <img
-              src={product.images?.[0] || "/placeholder-product.jpg"}
+              src={
+                product.images?.[0]
+                  ? `http://127.0.0.1:8000/storage/${product.images[0]}`
+                  : "/placeholder-product.jpg"
+              }
               alt={product.name}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"

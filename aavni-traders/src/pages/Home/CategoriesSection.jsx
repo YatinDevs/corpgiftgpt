@@ -3,14 +3,14 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useStore } from "../../store/useStore";
 import {
-  Cpu,
-  ShoppingBag,
-  Shirt,
+  Gift,
+  Box,
   Home,
-  Smartphone,
-  Watch,
-  Headphones,
-  Camera,
+  Briefcase,
+  Cake,
+  Diamond,
+  Leaf,
+  Coffee,
 } from "lucide-react";
 
 const CategoriesSection = () => {
@@ -28,68 +28,74 @@ const CategoriesSection = () => {
   // Map category slugs to icons
   const getCategoryIcon = (slug) => {
     const iconMap = {
-      electronics: <Smartphone className="h-8 w-8 text-blue-600" />,
-      clothing: <Shirt className="h-8 w-8 text-green-600" />,
-      "home-kitchen": <Home className="h-8 w-8 text-purple-600" />,
-      // Add more mappings as needed
+      "corporate-gifts": <Briefcase className="h-8 w-8 text-[#a30d14]" />,
+      "festive-gifts": <Cake className="h-8 w-8 text-[#fcce01]" />,
+      "welcome-kits": <Home className="h-8 w-8 text-[#1b53a5]" />,
+      "dry-fruit-hampers": <Leaf className="h-8 w-8 text-[#a30d14]" />,
+      "luxurious-gifts": <Diamond className="h-8 w-8 text-[#fcce01]" />,
+      "spiritual-gifts": <Coffee className="h-8 w-8 text-[#1b53a5]" />,
     };
-    return iconMap[slug] || <ShoppingBag className="h-8 w-8 text-gray-600" />;
+    return iconMap[slug] || <Gift className="h-8 w-8 text-[#a30d14]" />;
   };
 
   // Generate placeholder images based on category
   const getCategoryImage = (slug) => {
     const imageMap = {
-      electronics:
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      clothing:
-        "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      "home-kitchen":
-        "https://images.unsplash.com/photo-1583845112203-4549b8091f47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
-      // Add more mappings as needed
+      "corporate-gifts":
+        "https://images.unsplash.com/photo-1600880292203-757bb62b4baf",
+      "festive-gifts":
+        "https://images.unsplash.com/photo-1604061986761-d9a4d4b45b05",
+      "welcome-kits":
+        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2",
+      "dry-fruit-hampers":
+        "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716",
+      "luxurious-gifts":
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f",
+      "spiritual-gifts":
+        "https://images.unsplash.com/photo-1589998059171-988d887df646",
     };
-    return imageMap[slug] || "https://via.placeholder.com/500";
+    return (
+      imageMap[slug] ||
+      "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf"
+    );
   };
 
   // Generate color classes based on index
   const getColorClass = (index) => {
     const colors = [
-      "bg-blue-100",
-      "bg-green-100",
-      "bg-purple-100",
-      "bg-amber-100",
-      "bg-red-100",
-      "bg-indigo-100",
-      "bg-teal-100",
-      "bg-gray-100",
+      "bg-[#fcce01]/20",
+      "bg-[#a30d14]/20",
+      "bg-[#1b53a5]/20",
+      "bg-[#d4d3d0]/20",
     ];
     return colors[index % colors.length];
   };
 
   if (loadingCategories) {
     return (
-      <div className="py-16 bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="py-16 bg-[#F9F5F0] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#a30d14]"></div>
       </div>
     );
   }
 
   if (categoriesError) {
     return (
-      <div className="py-16 bg-gray-50 flex items-center justify-center">
-        <div className="text-red-500">{categoriesError}</div>
+      <div className="py-16 bg-[#F9F5F0] flex items-center justify-center">
+        <div className="text-[#a30d14]">{categoriesError}</div>
       </div>
     );
   }
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-[#F9F5F0]">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Explore Our Categories
+          <h2 className="text-3xl md:text-4xl font-bold text-[#a30d14] mb-4">
+            Our Gifting Categories
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            Discover our wide range of product categories
+          <p className="text-[#5e0808] max-w-2xl mx-auto text-lg">
+            Discover unique and customized corporate gifting solutions
           </p>
         </div>
 
@@ -105,7 +111,7 @@ const CategoriesSection = () => {
               className="group"
             >
               <Link to={`/category/${category.slug}`} className="block">
-                <div className="relative overflow-hidden rounded-xl aspect-square bg-white shadow-sm hover:shadow-md transition-all duration-300">
+                <div className="relative overflow-hidden rounded-xl aspect-square bg-white shadow-sm hover:shadow-md transition-all duration-300 border border-[#d4d3d0]">
                   <img
                     src={getCategoryImage(category.slug)}
                     alt={category.name}
@@ -124,7 +130,7 @@ const CategoriesSection = () => {
                       {category.name}
                     </h3>
                     <span className="text-white/80 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {category.products_count} products →
+                      {category.products_count} options →
                     </span>
                   </div>
                 </div>

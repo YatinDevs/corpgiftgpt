@@ -4,6 +4,7 @@ import ProductShowcase from "./ProductShowcase";
 import CategoriesSection from "./CategoriesSection";
 import ProductsPage from "./ProductsPage";
 import ComboPacksShowcase from "./ComboPacksShowcase";
+import WhoWeAre from "./WhoWeAre";
 
 function Home() {
   return (
@@ -11,7 +12,9 @@ function Home() {
       <HeroSection />
       <CategoriesSection />
       <ProductShowcase />
+      <WhoWeAre />
       <ComboPacksShowcase />
+      <WhoWeAre />
     </div>
   );
 }
