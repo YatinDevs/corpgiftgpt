@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('combo_packs', function (Blueprint $table) {
             $table->id();
             $table->string('combo_code')->unique()->comment('Admin defined unique code');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade'); // Add this line
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();

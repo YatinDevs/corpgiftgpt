@@ -27,6 +27,11 @@ class ComboPackResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
+                Forms\Components\Select::make('category_id') // Add this field
+                    ->relationship('category', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
@@ -85,6 +90,8 @@ class ComboPackResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('category.name') // Add this column
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
@@ -95,6 +102,8 @@ class ComboPackResource extends Resource
                     ->boolean(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('category') // Add this filter
+                    ->relationship('category', 'name'),
                 Tables\Filters\SelectFilter::make('is_active')
                     ->options([
                         '1' => 'Active',

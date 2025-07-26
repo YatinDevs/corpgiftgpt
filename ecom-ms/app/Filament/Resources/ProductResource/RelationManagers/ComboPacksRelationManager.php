@@ -27,6 +27,8 @@ class ComboPacksRelationManager extends RelationManager
                     ->required()
                     ->numeric()
                     ->prefix('$'),
+                Forms\Components\Toggle::make('is_active')
+                    ->required(),
             ]);
     }
 
@@ -42,6 +44,8 @@ class ComboPacksRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('price')
                     ->money()
                     ->sortable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('pivot.quantity')
                     ->label('Quantity in Combo'),
             ])

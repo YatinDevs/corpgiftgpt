@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Filament\Resources\CategoryResource\RelationManagers\ProductsRelationManager;
+use App\Filament\Resources\ProductResource\RelationManagers\ComboPacksRelationManager;
 use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -34,6 +35,12 @@ class CategoryResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
+                Tables\Columns\TextColumn::make('products_count') // Show product count
+                        ->counts('products')
+                        ->label('Products'),
+                Tables\Columns\TextColumn::make('comboPacks_count') // Show combo pack count
+                    ->counts('comboPacks')
+                    ->label('Combo Packs'),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
@@ -88,6 +95,8 @@ class CategoryResource extends Resource
     {
         return [
             ProductsRelationManager::class,
+            ComboPacksRelationManager::class, // Add this relation manager
+
         ];
     }
 

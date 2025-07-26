@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo; // Add this import
+use Illuminate\Database\Eloquent\Relations\BelongsToMany; // Add this import
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ComboPack extends Model
 {
-     use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'combo_code',
+        'category_id',
         'name',
         'slug',
         'description',
@@ -24,9 +27,14 @@ class ComboPack extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'images' => 'array',
-    ];
+    ];   
+    
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
-    public function products()
+    public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)
             ->withPivot('quantity')

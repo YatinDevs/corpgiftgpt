@@ -22,11 +22,16 @@ class Category extends Model
         'is_active' => 'boolean',
     ];
 
-    public function products()
+
+     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
+    public function comboPacks(): HasMany // Add this relationship
+    {
+        return $this->hasMany(ComboPack::class);
+    }
     // Generate slug automatically
     public static function boot()
     {
