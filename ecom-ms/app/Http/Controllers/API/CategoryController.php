@@ -5,22 +5,17 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\ComboPack;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $categories = Category::withCount('products')->get();
+        $categories = Category::withCount(['products', 'comboPacks'])->get();
         return response()->json($categories);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -45,18 +40,20 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        $category = Category::with('products')->findOrFail($id);
+        $category = Category::with(['products', 'comboPacks'])->findOrFail($id);
         return response()->json($category);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    public function comboPacks($id)
+    {
+        $comboPacks = ComboPack::where('category_id', $id)
+            ->with('products')
+            ->get();
+        return response()->json($comboPacks);
+    }
+
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
@@ -75,7 +72,6 @@ class CategoryController extends Controller
         $data = $validator->validated();
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($category->image) {
                 \Storage::disk('public')->delete($category->image);
             }
@@ -87,21 +83,16 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-         $category = Category::findOrFail($id);
+        $category = Category::findOrFail($id);
         
-        // Check if category has products
-        if ($category->products()->count() > 0) {
+        if ($category->products()->count() > 0 || $category->comboPacks()->count() > 0) {
             return response()->json([
-                'message' => 'Cannot delete category with associated products.'
+                'message' => 'Cannot delete category with associated products or combo packs.'
             ], 422);
         }
 
-        // Delete image if exists
         if ($category->image) {
             \Storage::disk('public')->delete($category->image);
         }
